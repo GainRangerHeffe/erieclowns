@@ -1,6 +1,9 @@
 // Where request forms go. FormSubmit emails each request to this address.
 // The very first submission sends an activation email to that inbox; click it once.
 var FORM_ENDPOINT = "https://formsubmit.co/ajax/TheClownRusty@gmail.com";
+// Events come from a Google Sheet published as CSV (File > Share > Publish to web > Events tab > CSV).
+// Paste that link here. While it's empty the site falls back to content/events.json.
+var EVENTS_SHEET_CSV = "";
 var EVENTS_URL = "content/events.json";
 
 (function () {
@@ -93,10 +96,81 @@ function initEvents() {
   var limit = parseInt(list.getAttribute("data-limit") || "0", 10);
   var pastBox = document.getElementById("events-past");
 
-  fetch(EVENTS_URL, { cache: "no-store" })
-    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then(function (data) { render((data && data.events) || []); })
-    .catch(function () { render([]); });
+  var load = EVENTS_SHEET_CSV
+    ? fetch(EVENTS_SHEET_CSV, { cache: "no-store" })
+        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+        .then(sheetToEvents)
+    : fetch(EVENTS_URL, { cache: "no-store" })
+        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function (data) { return (data && data.events) || []; });
+  load.then(render).catch(function () { render([]); });
+
+  // Sheet columns (header row, any order, case-insensitive):
+  // Title, Date, Start time, End time, Type, Location, Address, Description, Image URL, Link
+  function sheetToEvents(text) {
+    var rows = parseCSV(text).filter(function (r) { return r.some(function (c) { return c.trim(); }); });
+    if (!rows.length) return [];
+    var head = rows.shift().map(function (h) { return h.trim().toLowerCase(); });
+    function col(row, names) {
+      for (var i = 0; i < names.length; i++) {
+        var k = head.indexOf(names[i]);
+        if (k > -1 && row[k] != null && row[k].trim()) return row[k].trim();
+      }
+      return "";
+    }
+    return rows.map(function (r) {
+      var day = toISODate(col(r, ["date", "event date"]));
+      if (!day) return null;
+      var st = toTime(col(r, ["start time", "start", "time"]));
+      var et = toTime(col(r, ["end time", "end"]));
+      return {
+        title: col(r, ["title", "event", "name"]),
+        type: col(r, ["type", "category"]),
+        start: day + (st ? "T" + st : ""),
+        end: et ? day + "T" + et : "",
+        location: col(r, ["location", "place", "where"]),
+        address: col(r, ["address"]),
+        description: col(r, ["description", "details"]),
+        image: col(r, ["image url", "image", "photo"]),
+        link: col(r, ["link", "more info", "url"])
+      };
+    }).filter(Boolean);
+  }
+  function toISODate(s) {
+    var m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+    if (m) return m[1] + "-" + pad(m[2]) + "-" + pad(m[3]);
+    m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
+    if (m) return (m[3].length === 2 ? "20" + m[3] : m[3]) + "-" + pad(m[1]) + "-" + pad(m[2]);
+    var d = new Date(s);
+    return isNaN(d) ? "" : d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  }
+  function toTime(s) {
+    var m = s.match(/^(\d{1,2})(?::(\d{2}))?(?::\d{2})?\s*([ap])?\.?m?\.?$/i);
+    if (!m) return "";
+    var h = +m[1], ap = (m[3] || "").toLowerCase();
+    if (ap === "p" && h < 12) h += 12;
+    if (ap === "a" && h === 12) h = 0;
+    return pad(h) + ":" + (m[2] || "00");
+  }
+  function pad(n) { return String(n).length < 2 ? "0" + n : String(n); }
+  function parseCSV(text) {
+    var rows = [], row = [], cell = "", q = false;
+    for (var i = 0; i < text.length; i++) {
+      var c = text[i];
+      if (q) {
+        if (c === '"' && text[i + 1] === '"') { cell += '"'; i++; }
+        else if (c === '"') q = false;
+        else cell += c;
+      } else if (c === '"') q = true;
+      else if (c === ",") { row.push(cell); cell = ""; }
+      else if (c === "\n" || c === "\r") {
+        if (c === "\r" && text[i + 1] === "\n") i++;
+        row.push(cell); rows.push(row); row = []; cell = "";
+      } else cell += c;
+    }
+    if (cell || row.length) { row.push(cell); rows.push(row); }
+    return rows;
+  }
 
   function render(events) {
     var now = new Date();

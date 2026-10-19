@@ -3,7 +3,7 @@
 
 Edit SITE settings or page content here, then run:  python3 _src/build.py
 The generated .html files at the repo root are what Hostinger serves.
-Events are NOT built here: they live in content/events.json and are edited in /admin.
+Events are NOT built here: they come from a Google Sheet (EVENTS_SHEET_CSV in assets/js/site.js).
 """
 import json
 from pathlib import Path
@@ -511,5 +511,5 @@ PAGES = [
 
 sitemap = "".join(f"  <url><loc>{SITE['url']}/{'' if p == 'index.html' else p}</loc></url>\n" for p in PAGES if p != "404.html")
 (ROOT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{sitemap}</urlset>\n')
-(ROOT / "robots.txt").write_text(f"User-agent: *\nDisallow: /admin/\nDisallow: /_src/\nSitemap: {SITE['url']}/sitemap.xml\n")
+(ROOT / "robots.txt").write_text(f"User-agent: *\nDisallow: /_src/\nSitemap: {SITE['url']}/sitemap.xml\n")
 print("Built", ", ".join(PAGES))

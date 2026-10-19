@@ -3,7 +3,7 @@ ErrorDocument 404 /404.html
 DirectoryIndex index.html
 
 # Never serve secrets or build tools
-<FilesMatch "^(config\.php|config\.sample\.php|README\.md|\.gitignore)$">
+<FilesMatch "^(README\.md|\.gitignore)$">
   Require all denied
 </FilesMatch>
 RedirectMatch 404 ^/_src/
