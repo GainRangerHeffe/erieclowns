@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /_src/
+Sitemap: https://eriesistibleclowns.com/sitemap.xml
