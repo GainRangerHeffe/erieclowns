@@ -3,7 +3,7 @@
 var FORM_ENDPOINT = "https://formsubmit.co/ajax/TheClownRusty@gmail.com";
 // Events come from a Google Sheet published as CSV (File > Share > Publish to web > Events tab > CSV).
 // Paste that link here. While it's empty the site falls back to content/events.json.
-var EVENTS_SHEET_CSV = "";
+var EVENTS_SHEET_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRgKP5oG7tjSArSD2RUzweXsIo4uVhGvkC0Jy-I7UxC972Fb0LtnTfDBvaAagwfWEk5OXZdvuwXZCE3/pub?output=csv";
 var EVENTS_URL = "content/events.json";
 
 (function () {
