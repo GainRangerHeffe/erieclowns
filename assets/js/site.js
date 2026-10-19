@@ -202,6 +202,7 @@ function initEvents() {
 
   function card(e, isPast) {
     var el = document.createElement("article");
+    var img = imageUrl(e.image);
     el.className = "event" + (isPast ? " past" : "");
     var d = e._start;
     var month = d.toLocaleDateString("en-US", { month: "short" });
@@ -214,9 +215,17 @@ function initEvents() {
       "<h3>" + esc(e.title) + "</h3>" +
       '<p class="meta">' + esc(when) + (e.location ? " · " + esc(e.location) : "") + "</p>" +
       (e.description ? '<p class="desc">' + esc(e.description).replace(/\n/g, "<br>") + "</p>" : "") +
-      (e.image ? '<img src="' + attr(e.image.replace(/^\//, "")) + '" alt="' + attr(e.title) + '" loading="lazy">' : "") +
       (e.link && !isPast ? '<p class="desc"><a href="' + attr(e.link) + '" target="_blank" rel="noopener">More details</a></p>' : "") +
-      "</div>";
+      "</div>" +
+      (img ? '<a class="event-img" href="' + attr(img) + '" target="_blank" rel="noopener"><img src="' + attr(img) +
+        '" alt="' + attr(e.title) + '" loading="lazy" referrerpolicy="no-referrer"></a>' : "");
+    if (img) {
+      el.classList.add("has-img");
+      el.querySelector(".event-img img").addEventListener("error", function () {
+        el.classList.remove("has-img");
+        this.parentNode.remove();
+      });
+    }
     return el;
   }
 
@@ -238,6 +247,17 @@ function initEvents() {
     document.head.appendChild(s);
   }
 
+
+  // Turn common "share" links into direct image links.
+  function imageUrl(u) {
+    u = String(u || "").trim();
+    if (!u) return "";
+    var m;
+    if ((m = u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([\w-]+)/))) return "https://lh3.googleusercontent.com/d/" + m[1];
+    if ((m = u.match(/^https?:\/\/(?:www\.|m\.)?imgur\.com\/(?:gallery\/|a\/)?(?:[\w-]*-)?(\w{5,8})(?:[?#].*)?$/))) return "https://i.imgur.com/" + m[1] + ".jpg";
+    if (/dropbox\.com\//.test(u)) return u.replace(/([?&])dl=0/, "$1raw=1").replace(/^(?!.*[?&]raw=1)(.*)$/, function (x) { return x + (x.indexOf("?") > -1 ? "&" : "?") + "raw=1"; });
+    return u.replace(/^\//, "");
+  }
   function parseLocal(s) {
     var m = String(s).match(/^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2}))?/);
     if (!m) return new Date(s);
