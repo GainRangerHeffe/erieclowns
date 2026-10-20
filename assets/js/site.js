@@ -77,7 +77,9 @@ function initForm() {
       body: JSON.stringify(data)
     })
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-      .then(function () {
+      .then(function (res) {
+        // FormSubmit answers 200 with success "false" until the inbox owner activates the form.
+        if (res && String(res.success) === "false") throw new Error(res.message || "not delivered");
         form.reset(); sync();
         result.className = "result ok";
         result.textContent = "Thanks! Your request is in, and a clown will get back to you soon.";
