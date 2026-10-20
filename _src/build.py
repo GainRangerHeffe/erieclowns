@@ -241,11 +241,14 @@ HOME = f"""
 
 BOOK = f"""
 <section class="hero">
-  <div class="wrap stack" style="gap:18px">
-    <p class="eyebrow">Book clowns</p>
-    <h1>Bring the clowns to your event</h1>
-    <p class="lede">We're a volunteer nonprofit, so community and nonprofit events come first. Planning a birthday party? We'll connect you with one of our member clowns for free.</p>
-    <div class="btn-row"><a class="btn btn-red" href="contact.html?type=community">Request clowns</a><a class="btn" href="contact.html?type=private">Birthday party referral</a></div>
+  <div class="wrap split">
+    <div class="stack" style="gap:18px">
+      <p class="eyebrow">Book clowns</p>
+      <h1>Bring the clowns to your event</h1>
+      <p class="lede">We're a volunteer nonprofit, so community and nonprofit events come first. Planning a birthday party? We'll connect you with one of our member clowns for free.</p>
+      <div class="btn-row"><a class="btn btn-red" href="contact.html?type=community">Request clowns</a><a class="btn" href="contact.html?type=private">Birthday party referral</a></div>
+    </div>
+    <img class="pic" src="assets/img/clowns-at-event.jpg" alt="ERIEsistible Clowns twisting balloons and face painting under their tent at an outdoor event" width="1400" height="1050">
   </div>
 </section>
 {TENT}
@@ -296,7 +299,7 @@ HALL = f"""
       <p class="lede">Our 5,000 sq ft hall at {SITE['street']} was built by our own members in 1972. It's big enough for a crowd and affordable enough for a family party.</p>
       <div class="btn-row"><a class="btn btn-red" href="contact.html?type=hall">Check a date</a></div>
     </div>
-    <div class="photo">Photo: inside Kury Hall set up for a party</div>
+    <img class="pic" src="assets/img/kury-hall.jpg" alt="Inside Kury Hall: a large room with rows of tables and chairs and clown murals on the walls" width="1000" height="750">
   </div>
 </section>
 {TENT}
@@ -334,7 +337,7 @@ COLLEGE = f"""
       <p class="lede">Learn, laugh and perform. Clown College meets one night a week for eight weeks each fall at Kury Hall. Ages 8 and up; kids join with a parent or guardian.</p>
       <div class="btn-row"><a class="btn btn-red" href="contact.html?type=college">Get on the list</a></div>
     </div>
-    <div><img class="flyer flyer-small" src="assets/img/flyer-clown-college.jpg" alt="Clown College flyer: 8 weeks, every Thursday, 6 to 8 PM, $125 or $100 when you register early" width="206" height="206"></div>
+    <div><img class="flyer flyer-college" src="assets/img/flyer-clown-college.jpg" alt="Clown College flyer: 8 weeks, every Thursday, 6 to 8 PM, $125 or $100 when you register early" width="206" height="206"></div>
   </div>
 </section>
 {TENT}

@@ -143,7 +143,8 @@ ul.dots.cols { grid-template-columns: 1fr 1fr; gap: 10px 28px; }
 .photo { aspect-ratio: 4/3; max-width: 100%; border-radius: 20px; border: 3px dashed var(--muted); display: grid; place-items: center; text-align: center;
   padding: 18px; color: var(--muted); font-weight: 800; background: repeating-linear-gradient(135deg, var(--paper) 0 14px, var(--sand) 14px 28px); }
 .flyer { border: 3px solid var(--ink); border-radius: 16px; box-shadow: 8px 8px 0 var(--gold); display: block; }
-.flyer-small { max-width: 320px; image-rendering: auto; }
+.flyer-college { width: 100%; max-width: 440px; margin: 0 auto; }
+.pic { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border: 3px solid var(--ink); border-radius: 20px; box-shadow: 8px 8px 0 var(--gold); }
 
 .callout { background: var(--paper); border: 3px solid var(--ink); border-radius: 20px; padding: 22px; box-shadow: 6px 6px 0 var(--green); display: grid; gap: 10px; }
 
