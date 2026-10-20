@@ -28,6 +28,8 @@ SITE = {
     "zip": "16505",
     "hall_price": "",                           # TODO: e.g. "$250 per event"
     "erie_gives": "https://www.eriegives.org/organization/eriesistible-clowns",
+    "donate_url": "",                           # TODO: year-round donation link (Zeffy, PayPal, etc.)
+    "ein": "47-1013614",
     "college_price": "$125",
     "college_early": "$100",
 }
@@ -66,6 +68,7 @@ def org_jsonld():
         "alternateName": "Erie Clowns",
         "slogan": "Purveyors of Nonsense",
         "foundingDate": "1968",
+        "taxID": SITE["ein"],
         "url": SITE["url"] + "/",
         "logo": SITE["url"] + "/assets/img/logo.png",
         "email": SITE["email"],
@@ -400,6 +403,9 @@ EVENTS = f"""
 </section>
 """
 
+DONATE_BTN = (f'<a class="btn btn-red" href="{SITE["donate_url"]}" target="_blank" rel="noopener">Donate now</a>'
+              if SITE["donate_url"] else '<a class="btn btn-red" href="contact.html?type=other">Ask about donating</a>')
+
 DONATE = f"""
 <section class="hero">
   <div class="wrap split">
@@ -407,8 +413,9 @@ DONATE = f"""
       <p class="eyebrow">Donate</p>
       <h1>Help us keep the laughter going</h1>
       <p class="lede">Your donation helps the ERIEsistible Clowns bring smiles, laughter and joy to children and families across Erie through hospital visits, parades, special events and more.</p>
-      <div class="btn-row"><a class="btn btn-red" href="{SITE['erie_gives']}" target="_blank" rel="noopener">Donate on Erie Gives</a></div>
-      <p class="note">Erie Gives is the Erie Community Foundation's annual day of giving. Every dollar makes a difference.</p>
+      <div class="btn-row">{DONATE_BTN}<a class="btn" href="{SITE['erie_gives']}" target="_blank" rel="noopener">Our Erie Gives page</a></div>
+      <p class="note">Erie Gives is the Erie Community Foundation's day of giving and is only open for a short time each year. Every dollar makes a difference.</p>
+      <p class="note">ERIEsistible Clowns is a Pennsylvania nonprofit. EIN {SITE['ein']}.</p>
     </div>
     <div><img class="flyer" src="assets/img/flyer-erie-gives.jpg" alt="Flyer: Help us keep the laughter going. We need your support on Erie Gives." width="1024" height="1536" loading="lazy"></div>
   </div>
