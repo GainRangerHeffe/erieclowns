@@ -5,10 +5,16 @@ Edit SITE settings or page content here, then run:  python3 _src/build.py
 The generated .html files at the repo root are what Hostinger serves.
 Events are NOT built here: they come from a Google Sheet (EVENTS_SHEET_CSV in assets/js/site.js).
 """
+import hashlib
 import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+
+
+def ver(path):
+    """Short content hash so browsers and Hostinger's cache pick up changed CSS/JS right away."""
+    return hashlib.md5((ROOT / path).read_bytes()).hexdigest()[:8]
 
 SITE = {
     "url": "https://eriesistibleclowns.com",   # TODO: real domain, no trailing slash
@@ -109,7 +115,7 @@ def page(slug, title, description, og_image, body, active=None, extra_ld=None):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Nunito:wght@400;600;700;800&display=swap">
-<link rel="stylesheet" href="assets/css/site.css">
+<link rel="stylesheet" href="assets/css/site.css?v={ver('assets/css/site.css')}">
 <script type="application/ld+json">{json.dumps(ld if len(ld) > 1 else ld[0])}</script>
 </head>
 <body>
@@ -159,7 +165,7 @@ def page(slug, title, description, og_image, body, active=None, extra_ld=None):
     <p class="copy">© <span id="yr">2026</span> ERIEsistible Clowns. All rights reserved.</p>
   </div>
 </footer>
-<script src="assets/js/site.js" defer></script>
+<script src="assets/js/site.js?v={ver('assets/js/site.js')}" defer></script>
 </body>
 </html>
 """

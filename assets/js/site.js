@@ -103,7 +103,7 @@ function initEvents() {
     : fetch(EVENTS_URL, { cache: "no-store" })
         .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
         .then(function (data) { return (data && data.events) || []; });
-  load.then(render).catch(function () { render([]); });
+  load.then(render).catch(function (err) { console.warn("Events could not be loaded:", err); render([]); });
 
   // Sheet columns (header row, any order, case-insensitive):
   // Title, Date, Start time, End time, Type, Location, Address, Description, Image URL, Link
