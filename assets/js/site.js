@@ -255,8 +255,9 @@ function initEvents() {
     if (!u) return "";
     var m;
     if ((m = u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([\w-]+)/))) return "https://lh3.googleusercontent.com/d/" + m[1];
-    // Only single-image Imgur pages map to a file; gallery and album IDs are posts, not images.
-    if ((m = u.match(/^https?:\/\/(?:www\.|m\.)?imgur\.com\/(\w{5,8})(?:[?#].*)?$/))) return "https://i.imgur.com/" + m[1] + ".jpg";
+    // Photo pages (Imgur posts, ImgBB, Google Photos) are looked up by img.php on the server,
+    // which finds the actual picture behind the page.
+    if (/^https:\/\/((www\.|m\.)?imgur\.com|ibb\.co|photos\.app\.goo\.gl|photos\.google\.com)\//.test(u)) return "img.php?url=" + encodeURIComponent(u);
     if (/dropbox\.com\//.test(u)) return u.replace(/([?&])dl=0/, "$1raw=1").replace(/^(?!.*[?&]raw=1)(.*)$/, function (x) { return x + (x.indexOf("?") > -1 ? "&" : "?") + "raw=1"; });
     return u.replace(/^\//, "");
   }
