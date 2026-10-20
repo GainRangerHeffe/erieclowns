@@ -208,3 +208,4 @@ footer.site h3 { font: 400 1.5rem var(--display); color: var(--gold); }
 footer.site strong { color: var(--gold); }
 footer.site .copy { grid-column: 1 / -1; border-top: 1px solid #4a3a2c; padding-top: 18px; font-size: .9rem; opacity: .8; }
 footer.site ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.pic.pic-wide { aspect-ratio: auto; }

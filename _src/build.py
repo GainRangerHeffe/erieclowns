@@ -234,7 +234,7 @@ HOME = f"""
       <p class="lede">Our mission is simple: make people from 1 to 100 smile and laugh.</p>
       <div class="btn-row"><a class="btn btn-gold" href="contact.html?type=join">Join the alley</a></div>
     </div>
-    <div class="photo">Photo: the alley together at a parade</div>
+    <img class="pic" src="assets/img/about-clowns.jpg" alt="Six ERIEsistible Clowns in full costume twisting balloons" width="1400" height="1050" loading="lazy">
   </div>
 </section>
 """
@@ -368,14 +368,23 @@ COLLEGE = f"""
     </div>
   </div>
 </section>
+<section class="band">
+  <div class="wrap stack" style="gap:20px">
+    <h2>Graduation day</h2>
+    <img class="pic pic-wide" src="assets/img/clown-college-grads.jpg" alt="Clown College graduates in full costume and makeup holding their certificates on the Kury Hall stage" width="1800" height="975" loading="lazy">
+  </div>
+</section>
 """
 
 EVENTS = f"""
 <section class="hero">
-  <div class="wrap stack" style="gap:18px">
-    <p class="eyebrow">Events</p>
-    <h1>Where to find the clowns</h1>
-    <p class="lede">Parades, festivals, fundraisers and Clown College nights. Want clowns at your event? <a href="contact.html?type=community">Send us a request</a>.</p>
+  <div class="wrap split">
+    <div class="stack" style="gap:18px">
+      <p class="eyebrow">Events</p>
+      <h1>Where to find the clowns</h1>
+      <p class="lede">Parades, festivals, fundraisers and Clown College nights. Want clowns at your event? <a href="contact.html?type=community">Send us a request</a>.</p>
+    </div>
+    <img class="pic" src="assets/img/clowns-at-event.jpg" alt="ERIEsistible Clowns twisting balloons and face painting under their tent at an outdoor event" width="1400" height="1050">
   </div>
 </section>
 {TENT}
