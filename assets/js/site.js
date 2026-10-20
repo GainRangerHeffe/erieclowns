@@ -221,10 +221,11 @@ function initEvents() {
         '" alt="' + attr(e.title) + '" loading="lazy" referrerpolicy="no-referrer"></a>' : "");
     if (img) {
       el.classList.add("has-img");
-      el.querySelector(".event-img img").addEventListener("error", function () {
-        el.classList.remove("has-img");
-        this.parentNode.remove();
-      });
+      var pic = el.querySelector(".event-img img");
+      var drop = function () { el.classList.remove("has-img"); if (pic.parentNode) pic.parentNode.remove(); };
+      pic.addEventListener("error", drop);
+      // Imgur answers a bad link with its 161x81 "image no longer available" picture instead of an error.
+      pic.addEventListener("load", function () { if (pic.naturalWidth === 161 && pic.naturalHeight === 81) drop(); });
     }
     return el;
   }
@@ -254,7 +255,8 @@ function initEvents() {
     if (!u) return "";
     var m;
     if ((m = u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([\w-]+)/))) return "https://lh3.googleusercontent.com/d/" + m[1];
-    if ((m = u.match(/^https?:\/\/(?:www\.|m\.)?imgur\.com\/(?:gallery\/|a\/)?(?:[\w-]*-)?(\w{5,8})(?:[?#].*)?$/))) return "https://i.imgur.com/" + m[1] + ".jpg";
+    // Only single-image Imgur pages map to a file; gallery and album IDs are posts, not images.
+    if ((m = u.match(/^https?:\/\/(?:www\.|m\.)?imgur\.com\/(\w{5,8})(?:[?#].*)?$/))) return "https://i.imgur.com/" + m[1] + ".jpg";
     if (/dropbox\.com\//.test(u)) return u.replace(/([?&])dl=0/, "$1raw=1").replace(/^(?!.*[?&]raw=1)(.*)$/, function (x) { return x + (x.indexOf("?") > -1 ? "&" : "?") + "raw=1"; });
     return u.replace(/^\//, "");
   }

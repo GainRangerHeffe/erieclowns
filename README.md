@@ -34,7 +34,7 @@ One-time setup:
 3. Paste that link into `EVENTS_SHEET_CSV` at the top of `assets/js/site.js` and re-upload that one file.
 4. Share the Sheet (Editor access) with whichever clowns will post events.
 
-Columns: **Title**, **Date** (e.g. 11/28/2026), Start time (e.g. 10:00 AM), End time, Type (Parade, Community event, Fundraiser, Clown College, Hall event, Hospital visit), Location, Address, Description, Image URL, Link. Only Title and Date are required. Past events move to the "Past events" list automatically. Image URL can be a public Google Drive share link, an Imgur link, or any direct image link; the photo shows on the right side of the event card. For Imgur albums or galleries, open the picture, right-click it and use **Copy image address**. A link that doesn't load is hidden automatically.
+Columns: **Title**, **Date** (e.g. 11/28/2026), Start time (e.g. 10:00 AM), End time, Type (Parade, Community event, Fundraiser, Clown College, Hall event, Hospital visit), Location, Address, Description, Image URL, Link. Only Title and Date are required. Past events move to the "Past events" list automatically. Image URL can be a public Google Drive share link, an Imgur link, or any direct image link; the photo shows on the right side of the event card. For Imgur, open the post, right-click the picture and use **Copy image address** (it starts with `https://i.imgur.com/`); a gallery link like `imgur.com/gallery/...` points to the post, not the picture. A link that doesn't load is hidden automatically.
 
 ## Request form
 
