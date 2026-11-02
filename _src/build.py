@@ -19,8 +19,7 @@ def ver(path):
 SITE = {
     "url": "https://eriesistibleclowns.com",   # TODO: real domain, no trailing slash
     "name": "ERIEsistible Clowns",
-    "phone": "",                                # TODO: e.g. "(814) 555-0123"
-    "email": "TheClownRusty@gmail.com",
+    "email": "erieclowns@yahoo.com",           # only public contact; no phone number
     "facebook": "https://www.facebook.com/ERIEsistibleClowns",
     "street": "512 Kelso Dr",
     "city": "Erie",
@@ -30,6 +29,7 @@ SITE = {
     "erie_gives": "https://www.eriegives.org/organization/eriesistible-clowns",
     "donate_url": "",                           # TODO: year-round donation link (Zeffy, PayPal, etc.)
     "ein": "47-1013614",
+    "credit_url": "https://grhwebsolutions.com",
     "college_price": "$125",
     "college_early": "$100",
 }
@@ -52,12 +52,9 @@ def todo(value, label):
     return value if value else f'<span class="todo">[{label}]</span>'
 
 
-def phone_link():
-    p = SITE["phone"]
-    if not p:
-        return '<span>Call or text <span class="todo">[phone]</span></span>'
-    digits = "".join(c for c in p if c.isdigit())
-    return f'<a href="tel:+1{digits[-10:]}">Call or text {p}</a>'
+def credit():
+    name = "GRH Web Solutions"
+    return f'<a href="{SITE["credit_url"]}" target="_blank" rel="noopener">{name}</a>' if SITE["credit_url"] else name
 
 
 def org_jsonld():
@@ -77,8 +74,6 @@ def org_jsonld():
                     "addressRegion": SITE["region"], "postalCode": SITE["zip"], "addressCountry": "US"},
         "areaServed": "Erie, Pennsylvania",
     }
-    if SITE["phone"]:
-        data["telephone"] = SITE["phone"]
     return data
 
 
@@ -126,7 +121,7 @@ def page(slug, title, description, og_image, body, active=None, extra_ld=None):
 <div class="utility">
   <div class="wrap">
     <span class="loc">Kury Hall · {SITE['street']}, {SITE['city']}, {SITE['region']}</span>
-    {phone_link()}
+    <a href="mailto:{SITE['email']}">{SITE['email']}</a>
     <a href="{SITE['facebook']}" target="_blank" rel="noopener" aria-label="ERIEsistible Clowns on Facebook">{FB_SVG}<span>Facebook</span></a>
   </div>
 </div>
@@ -165,7 +160,7 @@ def page(slug, title, description, og_image, body, active=None, extra_ld=None):
         <li><a href="{SITE['facebook']}" target="_blank" rel="noopener">Facebook</a></li>
       </ul>
     </div>
-    <p class="copy">© <span id="yr">2026</span> ERIEsistible Clowns. All rights reserved.</p>
+    <p class="copy"><span>© <span id="yr">2026</span> ERIEsistible Clowns. All rights reserved.</span> <span class="credit">Designed by {credit()}</span></p>
   </div>
 </footer>
 <script src="assets/js/site.js?v={ver('assets/js/site.js')}" defer></script>
@@ -445,7 +440,6 @@ CONTACT = f"""
       <h1>Tell us what you're planning</h1>
       <p class="lede">Pick what you need and send it over. A real clown reads every request and gets back to you.</p>
       <div class="contact-list">
-        <p><strong>Phone:</strong> {phone_link()}</p>
         <p><strong>Email:</strong> <a href="mailto:{SITE['email']}">{SITE['email']}</a></p>
         <p><strong>Facebook:</strong> <a href="{SITE['facebook']}" target="_blank" rel="noopener">ERIEsistibleClowns</a></p>
         <p><strong>Kury Hall:</strong> <a href="https://maps.google.com/?q={SITE['street'].replace(' ', '+')}+{SITE['city']}+{SITE['region']}+{SITE['zip']}" target="_blank" rel="noopener">{SITE['street']}, {SITE['city']}, {SITE['region']} {SITE['zip']}</a></p>
