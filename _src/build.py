@@ -29,6 +29,7 @@ SITE = {
     "erie_gives": "https://www.eriegives.org/organization/eriesistible-clowns",
     "donate_url": "",                           # TODO: year-round donation link (Zeffy, PayPal, etc.)
     "ein": "47-1013614",
+    "credit_url": "",                           # TODO: GRH Web Solutions link for the footer credit
     "college_price": "$125",
     "college_early": "$100",
 }
@@ -49,6 +50,11 @@ NAV = [
 
 def todo(value, label):
     return value if value else f'<span class="todo">[{label}]</span>'
+
+
+def credit():
+    name = "GRH Web Solutions"
+    return f'<a href="{SITE["credit_url"]}" target="_blank" rel="noopener">{name}</a>' if SITE["credit_url"] else name
 
 
 def org_jsonld():
@@ -154,7 +160,7 @@ def page(slug, title, description, og_image, body, active=None, extra_ld=None):
         <li><a href="{SITE['facebook']}" target="_blank" rel="noopener">Facebook</a></li>
       </ul>
     </div>
-    <p class="copy">© <span id="yr">2026</span> ERIEsistible Clowns. All rights reserved.</p>
+    <p class="copy"><span>© <span id="yr">2026</span> ERIEsistible Clowns. All rights reserved.</span> <span class="credit">Designed by {credit()}</span></p>
   </div>
 </footer>
 <script src="assets/js/site.js?v={ver('assets/js/site.js')}" defer></script>
