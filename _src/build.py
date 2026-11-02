@@ -29,7 +29,7 @@ SITE = {
     "erie_gives": "https://www.eriegives.org/organization/eriesistible-clowns",
     "donate_url": "",                           # TODO: year-round donation link (Zeffy, PayPal, etc.)
     "ein": "47-1013614",
-    "credit_url": "",                           # TODO: GRH Web Solutions link for the footer credit
+    "credit_url": "https://grhwebsolutions.com",
     "college_price": "$125",
     "college_early": "$100",
 }
