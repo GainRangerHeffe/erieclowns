@@ -16,12 +16,12 @@ Static site for the ERIEsistible Clowns of Erie, PA. Hosted on Hostinger, deploy
 
 Open `_src/build.py` and fill in the `SITE` settings marked TODO, then run `python3 _src/build.py`:
 
-- `url`: the live domain, currently `https://erieclowns.com` (used for canonical URLs, Facebook/Google share images, `sitemap.xml` and `robots.txt`). If this is wrong, Facebook shows no image.
+- `url`: the main domain, currently `https://eriesistibleclowns.org` (used for canonical URLs, Facebook/Google share images, `sitemap.xml` and `robots.txt`). If this is wrong, Facebook shows no image.
 - `hall_price`
 
 ## Deploy on Hostinger (manual upload)
 
-Upload everything except `_src/`, `README.md` and `.git` into `public_html` with hPanel's File Manager. The easiest way: upload `erieclowns-upload.zip` (built from this repo) and use File Manager's **Extract**. Re-upload only the files that changed after an edit. `.htaccess` sends every visitor to `https://erieclowns.com` (HTTPS, no www), so SSL must stay on in hPanel.
+Upload everything except `_src/`, `README.md` and `.git` into `public_html` with hPanel's File Manager. The easiest way: upload `erieclowns-upload.zip` (built from this repo) and use File Manager's **Extract**. Re-upload only the files that changed after an edit. `.htaccess` sends every visitor (erieclowns.com, www, http) to `https://eriesistibleclowns.org`, so SSL must stay on in hPanel for both domains. If the main domain changes, update it there and in `build.py`.
 
 ## Events calendar (Google Sheet)
 
@@ -47,4 +47,4 @@ Each page has its own title, description, canonical URL, Open Graph and Twitter 
 After each upload:
 
 1. Facebook: paste each page URL into the [Sharing Debugger](https://developers.facebook.com/tools/debug/) and click **Scrape Again** so Facebook drops its old copy.
-2. Google: in [Search Console](https://search.google.com/search-console), add the Domain property `erieclowns.com` (verify with the DNS TXT record in Hostinger's DNS zone), then submit `https://erieclowns.com/sitemap.xml` under Sitemaps. If you'd rather use the HTML-tag method, paste the `content` value into `google_verification` in `build.py` and rebuild.
+2. Google: in [Search Console](https://search.google.com/search-console), add the Domain property `eriesistibleclowns.org` (verify with the DNS TXT record in Hostinger's DNS zone), then submit `https://eriesistibleclowns.org/sitemap.xml` under Sitemaps. If you'd rather use the HTML-tag method, paste the `content` value into `google_verification` in `build.py` and rebuild.

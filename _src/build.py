@@ -18,7 +18,7 @@ def ver(path):
     return hashlib.md5((ROOT / path).read_bytes()).hexdigest()[:8]
 
 SITE = {
-    "url": "https://erieclowns.com",           # live domain, no trailing slash (used in share tags, sitemap, robots)
+    "url": "https://eriesistibleclowns.org",   # main domain, no trailing slash (share tags, sitemap, robots). Keep .htaccess in sync.
     "name": "ERIEsistible Clowns",
     "email": "erieclowns@yahoo.com",           # only public contact; no phone number
     "facebook": "https://www.facebook.com/ERIEsistibleClowns",
