@@ -9,10 +9,14 @@ DirectoryIndex index.html
 RedirectMatch 404 ^/_src/
 RedirectMatch 404 ^/\.git
 
-# Force HTTPS (uncomment once SSL is active)
-# RewriteEngine On
-# RewriteCond %{HTTPS} off
-# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# One address for Google and Facebook: https://eriesistibleclowns.org
+# erieclowns.com, www and plain http all 301 here. Keep in sync with SITE["url"] in _src/build.py.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} !^eriesistibleclowns\.org$ [NC,OR]
+  RewriteCond %{HTTPS} off
+  RewriteRule ^ https://eriesistibleclowns.org%{REQUEST_URI} [L,R=301]
+</IfModule>
 
 <IfModule mod_expires.c>
   ExpiresActive On
@@ -22,4 +26,8 @@ RedirectMatch 404 ^/\.git
   ExpiresByType text/css "access plus 7 days"
   ExpiresByType application/javascript "access plus 7 days"
   ExpiresByType application/json "access plus 0 seconds"
+  ExpiresByType application/xml "access plus 0 seconds"
+  ExpiresByType application/manifest+json "access plus 7 days"
 </IfModule>
+
+AddType application/manifest+json .webmanifest

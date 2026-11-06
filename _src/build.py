@@ -5,6 +5,7 @@ Edit SITE settings or page content here, then run:  python3 _src/build.py
 The generated .html files at the repo root are what Hostinger serves.
 Events are NOT built here: they come from a Google Sheet (EVENTS_SHEET_CSV in assets/js/site.js).
 """
+import datetime
 import hashlib
 import json
 from pathlib import Path
@@ -17,10 +18,9 @@ def ver(path):
     return hashlib.md5((ROOT / path).read_bytes()).hexdigest()[:8]
 
 SITE = {
-    "url": "https://eriesistibleclowns.com",   # TODO: real domain, no trailing slash
+    "url": "https://eriesistibleclowns.org",   # main domain, no trailing slash (share tags, sitemap, robots). Keep .htaccess in sync.
     "name": "ERIEsistible Clowns",
-    "phone": "",                                # TODO: e.g. "(814) 555-0123"
-    "email": "TheClownRusty@gmail.com",
+    "email": "erieclowns@yahoo.com",           # only public contact; no phone number
     "facebook": "https://www.facebook.com/ERIEsistibleClowns",
     "street": "512 Kelso Dr",
     "city": "Erie",
@@ -30,6 +30,8 @@ SITE = {
     "erie_gives": "https://www.eriegives.org/organization/eriesistible-clowns",
     "donate_url": "",                           # TODO: year-round donation link (Zeffy, PayPal, etc.)
     "ein": "47-1013614",
+    "credit_url": "https://grhwebsolutions.com",
+    "google_verification": "",                  # optional: content="..." value from Search Console's HTML tag method
     "college_price": "$125",
     "college_early": "$100",
 }
@@ -52,12 +54,9 @@ def todo(value, label):
     return value if value else f'<span class="todo">[{label}]</span>'
 
 
-def phone_link():
-    p = SITE["phone"]
-    if not p:
-        return '<span>Call or text <span class="todo">[phone]</span></span>'
-    digits = "".join(c for c in p if c.isdigit())
-    return f'<a href="tel:+1{digits[-10:]}">Call or text {p}</a>'
+def credit():
+    name = "GRH Web Solutions"
+    return f'<a href="{SITE["credit_url"]}" target="_blank" rel="noopener">{name}</a>' if SITE["credit_url"] else name
 
 
 def org_jsonld():
@@ -77,8 +76,6 @@ def org_jsonld():
                     "addressRegion": SITE["region"], "postalCode": SITE["zip"], "addressCountry": "US"},
         "areaServed": "Erie, Pennsylvania",
     }
-    if SITE["phone"]:
-        data["telephone"] = SITE["phone"]
     return data
 
 
@@ -86,6 +83,14 @@ def page(slug, title, description, og_image, body, active=None, extra_ld=None):
     url = SITE["url"] + "/" + ("" if slug == "index.html" else slug)
     full_title = title if slug == "index.html" else f"{title} | {SITE['name']}"
     ld = [org_jsonld()] + (extra_ld or [])
+    if slug == "index.html":
+        ld.append({"@context": "https://schema.org", "@type": "WebSite", "name": SITE["name"],
+                   "alternateName": "Erie Clowns", "url": SITE["url"] + "/"})
+    img = f"{SITE['url']}/assets/img/{og_image}"
+    robots = "noindex, follow" if slug == "404.html" else "index, follow, max-image-preview:large"
+    canonical = "" if slug == "404.html" else f'<link rel="canonical" href="{url}">\n'
+    verify = (f'<meta name="google-site-verification" content="{SITE["google_verification"]}">\n'
+              if SITE["google_verification"] and slug == "index.html" else "")
     nav = "\n".join(
         f'      <a href="{href}"{CURRENT if href == active else ""}>{label}</a>' for href, label in NAV
     )
@@ -96,25 +101,29 @@ def page(slug, title, description, og_image, body, active=None, extra_ld=None):
 {BASE if slug == "404.html" else ""}<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{full_title}</title>
 <meta name="description" content="{description}">
-<link rel="canonical" href="{url}">
-<meta name="theme-color" content="#c8231b">
+<meta name="robots" content="{robots}">
+{canonical}{verify}<meta name="theme-color" content="#c8231b">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="{SITE['name']}">
 <meta property="og:locale" content="en_US">
 <meta property="og:url" content="{url}">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{description}">
-<meta property="og:image" content="{SITE['url']}/assets/img/{og_image}">
+<meta property="og:image" content="{img}">
+<meta property="og:image:secure_url" content="{img}">
+<meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="{SITE['name']} logo with {title}">
+<meta property="og:image:alt" content="{OG_ALT}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{title}">
 <meta name="twitter:description" content="{description}">
-<meta name="twitter:image" content="{SITE['url']}/assets/img/{og_image}">
-<link rel="icon" href="favicon.ico" sizes="32x32">
+<meta name="twitter:image" content="{img}">
+<meta name="twitter:image:alt" content="{OG_ALT}">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/img/icon-192.png">
 <link rel="apple-touch-icon" href="assets/img/icon-180.png">
+<link rel="manifest" href="site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Nunito:wght@400;600;700;800&display=swap">
@@ -126,7 +135,7 @@ def page(slug, title, description, og_image, body, active=None, extra_ld=None):
 <div class="utility">
   <div class="wrap">
     <span class="loc">Kury Hall · {SITE['street']}, {SITE['city']}, {SITE['region']}</span>
-    {phone_link()}
+    <a href="mailto:{SITE['email']}">{SITE['email']}</a>
     <a href="{SITE['facebook']}" target="_blank" rel="noopener" aria-label="ERIEsistible Clowns on Facebook">{FB_SVG}<span>Facebook</span></a>
   </div>
 </div>
@@ -165,7 +174,7 @@ def page(slug, title, description, og_image, body, active=None, extra_ld=None):
         <li><a href="{SITE['facebook']}" target="_blank" rel="noopener">Facebook</a></li>
       </ul>
     </div>
-    <p class="copy">© <span id="yr">2026</span> ERIEsistible Clowns. All rights reserved.</p>
+    <p class="copy"><span>© <span id="yr">2026</span> ERIEsistible Clowns. All rights reserved.</span> <span class="credit">Designed by {credit()}</span></p>
   </div>
 </footer>
 <script src="assets/js/site.js?v={ver('assets/js/site.js')}" defer></script>
@@ -177,6 +186,7 @@ def page(slug, title, description, og_image, body, active=None, extra_ld=None):
 
 
 BASE = '<base href="/">\n'
+OG_ALT = "ERIEsistible Clowns logo: a smiling clown with a green hat and polka-dot bow tie"
 CURRENT = ' aria-current="page"'
 TENT = '<div class="tent" aria-hidden="true"></div>'
 
@@ -445,7 +455,6 @@ CONTACT = f"""
       <h1>Tell us what you're planning</h1>
       <p class="lede">Pick what you need and send it over. A real clown reads every request and gets back to you.</p>
       <div class="contact-list">
-        <p><strong>Phone:</strong> {phone_link()}</p>
         <p><strong>Email:</strong> <a href="mailto:{SITE['email']}">{SITE['email']}</a></p>
         <p><strong>Facebook:</strong> <a href="{SITE['facebook']}" target="_blank" rel="noopener">ERIEsistibleClowns</a></p>
         <p><strong>Kury Hall:</strong> <a href="https://maps.google.com/?q={SITE['street'].replace(' ', '+')}+{SITE['city']}+{SITE['region']}+{SITE['zip']}" target="_blank" rel="noopener">{SITE['street']}, {SITE['city']}, {SITE['region']} {SITE['zip']}</a></p>
@@ -535,7 +544,14 @@ PAGES = [
     page("404.html", "Page Not Found", "This page could not be found.", "og-home.jpg", NOT_FOUND),
 ]
 
-sitemap = "".join(f"  <url><loc>{SITE['url']}/{'' if p == 'index.html' else p}</loc></url>\n" for p in PAGES if p != "404.html")
+today = datetime.date.today().isoformat()
+sitemap = "".join(f"  <url><loc>{SITE['url']}/{'' if p == 'index.html' else p}</loc><lastmod>{today}</lastmod></url>\n"
+                  for p in PAGES if p != "404.html")
 (ROOT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{sitemap}</urlset>\n')
 (ROOT / "robots.txt").write_text(f"User-agent: *\nDisallow: /_src/\nSitemap: {SITE['url']}/sitemap.xml\n")
+(ROOT / "site.webmanifest").write_text(json.dumps({
+    "name": SITE["name"], "short_name": "Erie Clowns", "start_url": "/", "display": "standalone",
+    "background_color": "#fef5de", "theme_color": "#c8231b",
+    "icons": [{"src": "/assets/img/icon-192.png", "sizes": "192x192", "type": "image/png"}],
+}, indent=2) + "\n")
 print("Built", ", ".join(PAGES))
