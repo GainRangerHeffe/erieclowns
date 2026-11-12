@@ -20,7 +20,8 @@ def ver(path):
 SITE = {
     "url": "https://eriesistibleclowns.org",   # main domain, no trailing slash (share tags, sitemap, robots). Keep .htaccess in sync.
     "name": "ERIEsistible Clowns",
-    "email": "erieclowns@yahoo.com",           # only public contact; no phone number
+    "phone": "814-580-5524",                   # official clown phone (call or text)
+    "email": "erieclowns@yahoo.com",
     "facebook": "https://www.facebook.com/ERIEsistibleClowns",
     "street": "512 Kelso Dr",
     "city": "Erie",
@@ -59,6 +60,11 @@ def credit():
     return f'<a href="{SITE["credit_url"]}" target="_blank" rel="noopener">{name}</a>' if SITE["credit_url"] else name
 
 
+def phone_link(text=None):
+    digits = "".join(c for c in SITE["phone"] if c.isdigit())
+    return f'<a href="tel:+1{digits[-10:]}">{text or SITE["phone"]}</a>'
+
+
 def org_jsonld():
     data = {
         "@context": "https://schema.org",
@@ -71,6 +77,7 @@ def org_jsonld():
         "url": SITE["url"] + "/",
         "logo": SITE["url"] + "/assets/img/logo.png",
         "email": SITE["email"],
+        "telephone": "+1-" + SITE["phone"],
         "sameAs": [SITE["facebook"]],
         "address": {"@type": "PostalAddress", "streetAddress": SITE["street"], "addressLocality": SITE["city"],
                     "addressRegion": SITE["region"], "postalCode": SITE["zip"], "addressCountry": "US"},
@@ -135,6 +142,7 @@ def page(slug, title, description, og_image, body, active=None, extra_ld=None):
 <div class="utility">
   <div class="wrap">
     <span class="loc">Kury Hall · {SITE['street']}, {SITE['city']}, {SITE['region']}</span>
+    {phone_link()}
     <a href="mailto:{SITE['email']}">{SITE['email']}</a>
     <a href="{SITE['facebook']}" target="_blank" rel="noopener" aria-label="ERIEsistible Clowns on Facebook">{FB_SVG}<span>Facebook</span></a>
   </div>
@@ -170,6 +178,7 @@ def page(slug, title, description, og_image, body, active=None, extra_ld=None):
       <strong>Reach us</strong>
       <ul>
         <li><a href="contact.html">Request a date</a></li>
+        <li>{phone_link("Call or text " + SITE["phone"])}</li>
         <li><a href="mailto:{SITE['email']}">{SITE['email']}</a></li>
         <li><a href="{SITE['facebook']}" target="_blank" rel="noopener">Facebook</a></li>
       </ul>
@@ -455,6 +464,7 @@ CONTACT = f"""
       <h1>Tell us what you're planning</h1>
       <p class="lede">Pick what you need and send it over. A real clown reads every request and gets back to you.</p>
       <div class="contact-list">
+        <p><strong>Phone:</strong> {phone_link()} (call or text)</p>
         <p><strong>Email:</strong> <a href="mailto:{SITE['email']}">{SITE['email']}</a></p>
         <p><strong>Facebook:</strong> <a href="{SITE['facebook']}" target="_blank" rel="noopener">ERIEsistibleClowns</a></p>
         <p><strong>Kury Hall:</strong> <a href="https://maps.google.com/?q={SITE['street'].replace(' ', '+')}+{SITE['city']}+{SITE['region']}+{SITE['zip']}" target="_blank" rel="noopener">{SITE['street']}, {SITE['city']}, {SITE['region']} {SITE['zip']}</a></p>
