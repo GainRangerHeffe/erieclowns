@@ -86,7 +86,7 @@ function initForm() {
       })
       .catch(function () {
         result.className = "result err";
-        result.textContent = "That didn't go through. Please email erieclowns@yahoo.com or message us on Facebook.";
+        result.textContent = "That didn't go through. Please call or text 814-580-5524, email erieclowns@yahoo.com or message us on Facebook.";
       })
       .then(function () { send.disabled = false; });
   });
