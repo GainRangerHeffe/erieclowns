@@ -11,10 +11,22 @@ var EVENTS_URL = "content/events.json";
   var btn = document.querySelector(".menu-btn");
   var nav = document.getElementById("main-nav");
   if (btn && nav) {
-    btn.addEventListener("click", function () {
-      var open = nav.classList.toggle("open");
+    var setMenu = function (open) {
+      nav.classList.toggle("open", open);
+      document.body.classList.toggle("menu-open", open);
       btn.setAttribute("aria-expanded", open ? "true" : "false");
+      btn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    };
+    btn.addEventListener("click", function () { setMenu(!nav.classList.contains("open")); });
+    // Close on Escape, on a tap outside the menu, after picking a link, or when the screen gets wide.
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && nav.classList.contains("open")) { setMenu(false); btn.focus(); }
     });
+    document.addEventListener("click", function (e) {
+      if (nav.classList.contains("open") && !nav.contains(e.target) && !btn.contains(e.target)) setMenu(false);
+    });
+    nav.addEventListener("click", function (e) { if (e.target.closest("a")) setMenu(false); });
+    window.addEventListener("resize", function () { if (window.innerWidth > 1000) setMenu(false); });
   }
 
   var yr = document.getElementById("yr");
@@ -86,7 +98,7 @@ function initForm() {
       })
       .catch(function () {
         result.className = "result err";
-        result.textContent = "That didn't go through. Please email erieclowns@yahoo.com or message us on Facebook.";
+        result.textContent = "That didn't go through. Please call or text 814-580-5524, email erieclowns@yahoo.com or message us on Facebook.";
       })
       .then(function () { send.disabled = false; });
   });

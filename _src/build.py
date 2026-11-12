@@ -20,7 +20,8 @@ def ver(path):
 SITE = {
     "url": "https://eriesistibleclowns.org",   # main domain, no trailing slash (share tags, sitemap, robots). Keep .htaccess in sync.
     "name": "ERIEsistible Clowns",
-    "email": "erieclowns@yahoo.com",           # only public contact; no phone number
+    "phone": "814-580-5524",                   # official clown phone (call or text)
+    "email": "erieclowns@yahoo.com",
     "facebook": "https://www.facebook.com/ERIEsistibleClowns",
     "street": "512 Kelso Dr",
     "city": "Erie",
@@ -40,6 +41,10 @@ FB_SVG = ('<svg class="fb-icon" viewBox="0 0 24 24" aria-hidden="true" focusable
           'd="M24 12.07C24 5.41 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 '
           '1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.5h-2.8V24C19.62 '
           '23.1 24 18.1 24 12.07"/></svg>')
+PHONE_SVG = ('<svg class="u-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" '
+             'd="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>')
+MAIL_SVG = ('<svg class="u-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" '
+            'd="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm9 7.2L4 7.3V17h16V7.3zM5.2 7l6.8 4.2L18.8 7z"/></svg>')
 
 NAV = [
     ("book-clowns.html", "Book Clowns"),
@@ -59,6 +64,15 @@ def credit():
     return f'<a href="{SITE["credit_url"]}" target="_blank" rel="noopener">{name}</a>' if SITE["credit_url"] else name
 
 
+def tel_href():
+    digits = "".join(c for c in SITE["phone"] if c.isdigit())
+    return f"tel:+1{digits[-10:]}"
+
+
+def phone_link(text=None):
+    return f'<a href="{tel_href()}">{text or SITE["phone"]}</a>'
+
+
 def org_jsonld():
     data = {
         "@context": "https://schema.org",
@@ -71,6 +85,7 @@ def org_jsonld():
         "url": SITE["url"] + "/",
         "logo": SITE["url"] + "/assets/img/logo.png",
         "email": SITE["email"],
+        "telephone": "+1-" + SITE["phone"],
         "sameAs": [SITE["facebook"]],
         "address": {"@type": "PostalAddress", "streetAddress": SITE["street"], "addressLocality": SITE["city"],
                     "addressRegion": SITE["region"], "postalCode": SITE["zip"], "addressCountry": "US"},
@@ -135,17 +150,21 @@ def page(slug, title, description, og_image, body, active=None, extra_ld=None):
 <div class="utility">
   <div class="wrap">
     <span class="loc">Kury Hall · {SITE['street']}, {SITE['city']}, {SITE['region']}</span>
-    <a href="mailto:{SITE['email']}">{SITE['email']}</a>
-    <a href="{SITE['facebook']}" target="_blank" rel="noopener" aria-label="ERIEsistible Clowns on Facebook">{FB_SVG}<span>Facebook</span></a>
+    <a class="u-phone" href="{tel_href()}">{PHONE_SVG}<span><span class="u-hint">Call or text </span>{SITE['phone']}</span></a>
+    <a class="u-mail" href="mailto:{SITE['email']}" aria-label="Email {SITE['email']}">{MAIL_SVG}<span class="u-text">{SITE['email']}</span></a>
+    <a class="u-fb" href="{SITE['facebook']}" target="_blank" rel="noopener" aria-label="ERIEsistible Clowns on Facebook">{FB_SVG}<span class="u-text">Facebook</span></a>
   </div>
 </div>
 <header class="site">
   <div class="wrap">
     <a class="brand" href="index.html"><img src="assets/img/logo.png" alt="" width="60" height="60"><span>ERIEsistible Clowns</span></a>
-    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><span></span><span></span><span></span></button>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu"><span class="bars" aria-hidden="true"><span></span><span></span><span></span></span><span class="menu-label" aria-hidden="true">Menu</span></button>
     <nav class="main" id="main-nav" aria-label="Main">
 {nav}
-      <a class="btn btn-red" href="contact.html">Request a date</a>
+      <div class="nav-cta">
+        <a class="btn btn-red" href="contact.html">Request a date</a>
+        <a class="btn btn-gold nav-call" href="{tel_href()}">{PHONE_SVG}Call or text</a>
+      </div>
     </nav>
   </div>
 </header>
@@ -170,6 +189,7 @@ def page(slug, title, description, og_image, body, active=None, extra_ld=None):
       <strong>Reach us</strong>
       <ul>
         <li><a href="contact.html">Request a date</a></li>
+        <li>{phone_link("Call or text " + SITE["phone"])}</li>
         <li><a href="mailto:{SITE['email']}">{SITE['email']}</a></li>
         <li><a href="{SITE['facebook']}" target="_blank" rel="noopener">Facebook</a></li>
       </ul>
@@ -455,6 +475,7 @@ CONTACT = f"""
       <h1>Tell us what you're planning</h1>
       <p class="lede">Pick what you need and send it over. A real clown reads every request and gets back to you.</p>
       <div class="contact-list">
+        <p><strong>Phone:</strong> {phone_link()} (call or text)</p>
         <p><strong>Email:</strong> <a href="mailto:{SITE['email']}">{SITE['email']}</a></p>
         <p><strong>Facebook:</strong> <a href="{SITE['facebook']}" target="_blank" rel="noopener">ERIEsistibleClowns</a></p>
         <p><strong>Kury Hall:</strong> <a href="https://maps.google.com/?q={SITE['street'].replace(' ', '+')}+{SITE['city']}+{SITE['region']}+{SITE['zip']}" target="_blank" rel="noopener">{SITE['street']}, {SITE['city']}, {SITE['region']} {SITE['zip']}</a></p>
