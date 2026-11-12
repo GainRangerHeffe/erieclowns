@@ -1,6 +1,6 @@
 // Where request forms go. FormSubmit emails each request to this address.
 // The very first submission sends an activation email to that inbox; click it once.
-var FORM_ENDPOINT = "https://formsubmit.co/ajax/TheClownRusty@gmail.com";
+var FORM_ENDPOINT = "https://formsubmit.co/ajax/erieclowns@yahoo.com";
 // Events come from a Google Sheet published as CSV (File > Share > Publish to web > Events tab > CSV).
 // Paste that link here. While it's empty the site falls back to content/events.json.
 var EVENTS_SHEET_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRgKP5oG7tjSArSD2RUzweXsIo4uVhGvkC0Jy-I7UxC972Fb0LtnTfDBvaAagwfWEk5OXZdvuwXZCE3/pub?output=csv";
@@ -86,7 +86,7 @@ function initForm() {
       })
       .catch(function () {
         result.className = "result err";
-        result.textContent = "That didn't go through. Please email TheClownRusty@gmail.com or message us on Facebook.";
+        result.textContent = "That didn't go through. Please email erieclowns@yahoo.com or message us on Facebook.";
       })
       .then(function () { send.disabled = false; });
   });
